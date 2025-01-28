@@ -13,88 +13,101 @@ class Program
     int delayMs = 10;
     int pollingDelayMs = 10;
     double heatCoefficient = 0.5;
+    bool continueSending;
     static async Task Main(string[] args)
     {
-        HttpListener httpListener = new HttpListener();
-        httpListener.Prefixes.Add("http://127.0.0.1:2024/");
-        httpListener.Start();
-        Console.WriteLine("Listening...");
-
-        Element[,] matrix = new Element[10, 10];
-        List<Thread> threads = new List<Thread>();
-
-        Random rnd = new Random();
-
-        Program p = new Program();
-
-        for (int i = 0; i < matrix.GetLength(0); i++)
-        {
-            for(int j = 0; j < matrix.GetLength(1); j++)
-            {
-                Element newEl = new Element();
-                //newEl.currentTemp = rnd.NextDouble() * 100;
-                newEl.currentTemp = 0;
-                matrix[i, j] = newEl;
-                Thread newThread = new Thread(() => p.PlateGo(newEl, p));
-                threads.Add(newThread);
-            }
-        }
-
-        for (int i = 0; i < matrix.GetLength(0); i++)
-        {
-            for (int j = 0; j < matrix.GetLength(1); j++)
-            {
-                if(i > 0)
-                {
-                    matrix[i,j].AddNeighbour(matrix[i-1,j]);
-                }
-                if(j > 0)
-                {
-                    matrix[i, j].AddNeighbour(matrix[i, j - 1]);
-                }
-                if(i < matrix.GetLength(0) - 1)
-                {
-                    matrix[i, j].AddNeighbour(matrix[i + 1, j]);
-                }
-                if (j < matrix.GetLength(1) - 1)
-                {
-                    matrix[i, j].AddNeighbour(matrix[i, j+1]);
-                }
-            }
-        }
-
-        foreach(Thread t in threads)
-        {
-            t.Start();
-        }
-
-
         while (true)
         {
-            HttpListenerContext context = await httpListener.GetContextAsync();
-            if (context.Request.IsWebSocketRequest)
-            {
-                HttpListenerWebSocketContext wsContext = await context.AcceptWebSocketAsync(null);
-                WebSocket webSocket = wsContext.WebSocket;
-                
-                Thread Sender = new Thread(() => p.SendLoop(webSocket, matrix));
-                Sender.Start();
 
-                // Keep the connection open for further communication
-                await ReceiveLoop(webSocket, matrix, p);
-                break;
-            }
-            else
+            HttpListener httpListener = new HttpListener();
+            httpListener.Prefixes.Add("http://127.0.0.1:2024/");
+            httpListener.Start();
+            Console.WriteLine("Listening...");
+
+            Element[,] matrix = new Element[10, 10];
+            List<Thread> threads = new List<Thread>();
+
+            Random rnd = new Random();
+
+            Program p = new Program();
+            p.continueSending = true;
+
+            for (int i = 0; i < matrix.GetLength(0); i++)
             {
-                context.Response.StatusCode = 400;
-                context.Response.Close();
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    Element newEl = new Element();
+                    //newEl.currentTemp = rnd.NextDouble() * 100;
+                    newEl.currentTemp = 0;
+                    matrix[i, j] = newEl;
+                    Thread newThread = new Thread(() => p.PlateGo(newEl, p));
+                    threads.Add(newThread);
+                }
+            }
+
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    if (i > 0)
+                    {
+                        matrix[i, j].AddNeighbour(matrix[i - 1, j]);
+                    }
+                    if (j > 0)
+                    {
+                        matrix[i, j].AddNeighbour(matrix[i, j - 1]);
+                    }
+                    if (i < matrix.GetLength(0) - 1)
+                    {
+                        matrix[i, j].AddNeighbour(matrix[i + 1, j]);
+                    }
+                    if (j < matrix.GetLength(1) - 1)
+                    {
+                        matrix[i, j].AddNeighbour(matrix[i, j + 1]);
+                    }
+                }
+            }
+
+            foreach (Thread t in threads)
+            {
+                t.Start();
+            }
+
+
+            while (true)
+            {
+                HttpListenerContext context = await httpListener.GetContextAsync();
+                if (context.Request.IsWebSocketRequest)
+                {
+                    HttpListenerWebSocketContext wsContext = await context.AcceptWebSocketAsync(null);
+                    WebSocket webSocket = wsContext.WebSocket;
+
+                    Thread Sender = new Thread(() => p.SendLoop(webSocket, matrix, p));
+                    Sender.Start();
+
+                    // Keep the connection open for further communication
+                    await ReceiveLoop(webSocket, matrix, p);
+                    await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "1", CancellationToken.None);
+                    p.continueSending = false;
+                    httpListener.Stop();
+                    break;
+                }
+                else
+                {
+                    context.Response.StatusCode = 400;
+                    context.Response.Close();
+                }
+            }
+            foreach(Element e in matrix)
+            {
+                e.stopRequested = true;
             }
         }
     }
 
     private static async Task ReceiveLoop(WebSocket webSocket, Element[,] matrix, Program p)
     {
-        while (true)
+        while (webSocket.State == WebSocketState.Open)
         {
             byte[] buffer = new byte[1024 * 4];
             var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
@@ -143,9 +156,9 @@ class Program
         //await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
     }
 
-    void SendLoop(WebSocket webSocket, Element[,] matrix)
+    void SendLoop(WebSocket webSocket, Element[,] matrix, Program p)
     {
-        while (true)
+        while (p.continueSending)
         {
             string message = CreateMatrixRepresentation(matrix);
             byte[] buffer = Encoding.UTF8.GetBytes(message);
