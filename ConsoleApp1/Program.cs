@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using ConsoleApp1;
+using SimulationServer;
 
 class Program
 {
@@ -54,6 +54,8 @@ class Program
         {
             string message = sim.CreateMatrixRepresentation();
             byte[] buffer = Encoding.UTF8.GetBytes(message);
+            //TODO: only send if new
+            Console.WriteLine("message size: " + buffer.Length);
             webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
             //webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Binary, true, CancellationToken.None);
             Thread.Sleep(sim.pollingDelayMs);

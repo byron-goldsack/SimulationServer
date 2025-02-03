@@ -5,8 +5,9 @@ using System.Net.WebSockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Google.Protobuf;
 
-namespace ConsoleApp1
+namespace SimulationServer
 {
     class ThermalSimulation
     {
@@ -17,7 +18,7 @@ namespace ConsoleApp1
         Element[,] matrix;
         public ThermalSimulation()
         {
-            matrix = new Element[20, 20];
+            matrix = new Element[15, 15];
         }
 
         public void BeginSimulation()
@@ -104,17 +105,23 @@ namespace ConsoleApp1
         public string CreateMatrixRepresentation()
         {
             string result = "";
-            foreach (Element e in matrix)
+            for (int i = 0; i < matrix.GetLength(0); i++)
             {
-                result += e.ToString();
-                result += ";";
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    result += matrix[i, j].ToString();
+                    if (i != matrix.GetLength(0) - 1 || j != matrix.GetLength(1) - 1)
+                    {
+                        result += ";";
+                    }
+                }
             }
             return result;
         }
 
         public void Stop()
         {
-            foreach(Element e in matrix)
+            foreach (Element e in matrix)
             {
                 e.stopRequested = true;
             }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace SimulationServer
 {
     class Element
     {
@@ -13,7 +13,8 @@ namespace ConsoleApp1
         public List<Element> neighbours;
         public bool isHeating;
 
-        public Element() {
+        public Element()
+        {
 
             currentTemp = 0;
             neighbours = new List<Element>();
@@ -47,8 +48,8 @@ namespace ConsoleApp1
 
         public override string? ToString()
         {
-            double red = (GetTemperature() / 100) * 255;
-            double blue = (255 - red);
+            double red = GetTemperature() / 100 * 255;
+            double blue = 255 - red;
 
             return (int)red + ":0:" + (int)blue;
         }

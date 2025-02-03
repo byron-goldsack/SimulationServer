@@ -1,0 +1,11 @@
+﻿syntax = "proto3";
+
+message RGB {
+	int red = 1;
+	int green = 2;
+	int blue = 3;
+}
+
+message Matrix {
+	repeated RGB values = 1;
+}
