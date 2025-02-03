@@ -1,9 +1,9 @@
 ﻿syntax = "proto3";
 
 message RGB {
-	int red = 1;
-	int green = 2;
-	int blue = 3;
+	int32 red = 1;
+	int32 green = 2;
+	int32 blue = 3;
 }
 
 message Matrix {

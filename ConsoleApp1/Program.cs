@@ -55,7 +55,6 @@ class Program
             string message = sim.CreateMatrixRepresentation();
             byte[] buffer = Encoding.UTF8.GetBytes(message);
             //TODO: only send if new
-            Console.WriteLine("message size: " + buffer.Length);
             webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
             //webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Binary, true, CancellationToken.None);
             Thread.Sleep(sim.pollingDelayMs);
@@ -67,25 +66,29 @@ class Program
         while (sim.continueSending && webSocket.State == WebSocketState.Open)
         {
             byte[] buffer = new byte[1024 * 4];
-            var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            string text = Encoding.Default.GetString(buffer);
-            List<string> parameters = text.Split(':').ToList();
 
-            if(parameters.Count > 1)
+            WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+
+            if (result.MessageType == WebSocketMessageType.Binary)
             {
+                byte[] messageBytes = new byte[result.Count];
+                Array.Copy(buffer, messageBytes, result.Count);
+
                 try
                 {
-                    sim.ParseParams(parameters);
+                    MouseEvent mouseEvent = MouseEvent.Parser.ParseFrom(messageBytes);
+
+                    Console.WriteLine("Mouse event received: " + mouseEvent.XPosition);
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
-                    Console.WriteLine(ex.ToString());
-                    Console.WriteLine(text);
-                    Console.WriteLine("Parameters: " + parameters);
-                    Console.WriteLine("Parameters count: " + parameters.Count);
+                    Console.WriteLine("Error parsing mouse event: " + e.Message);
                 }
             }
-
+            else if (result.MessageType == WebSocketMessageType.Close)
+            {
+                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+            }
         }
     }
 }
