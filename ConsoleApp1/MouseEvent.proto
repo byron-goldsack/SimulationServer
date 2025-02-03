@@ -1,0 +1,15 @@
+﻿syntax = "proto3";
+
+message MouseEvent {
+  string simulation = 1;
+  string type = 2;
+  string event = 3;
+  int32 x_position = 4;
+  int32 y_position = 5;
+  int32 temperature = 6;
+}
+
+message Settings {
+  string type = 1;
+  float coef = 2;
+}
