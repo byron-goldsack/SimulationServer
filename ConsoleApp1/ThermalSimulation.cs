@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Google.Protobuf;
+using System.Diagnostics;
 
 namespace SimulationServer
 {
@@ -16,15 +17,22 @@ namespace SimulationServer
         public double heatCoefficient = 0.5;
         public bool continueSending;
         Element[,] matrix;
-        public ThermalSimulation()
+        List<Thread> threads;
+        bool isReloading = false;
+        public ThermalSimulation(int defaultSize)
         {
-            matrix = new Element[15, 15];
+            matrix = new Element[defaultSize, defaultSize];
+            threads = new List<Thread>();
         }
 
-        public void BeginSimulation()
+        public void BeginSimulation(int size)
         {
-
-            List<Thread> threads = new List<Thread>();
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            isReloading = true;
+            Stop();
+            matrix = new Element[size, size];
+            threads = new List<Thread>();
 
             Random rnd = new Random();
 
@@ -41,8 +49,6 @@ namespace SimulationServer
                     threads.Add(newThread);
                 }
             }
-
-            Console.WriteLine("Matrix created");
 
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
@@ -67,18 +73,17 @@ namespace SimulationServer
                 }
             }
 
-            Console.WriteLine("Neighbours added");
-
             int k = 0;
             foreach (Thread t in threads)
             {
                 t.Start();
-                Console.WriteLine("Thread " + k + " started");
                 k++;
             }
 
             Console.WriteLine("Threads started");
-
+            isReloading = false;
+            sw.Stop();
+            Console.WriteLine("Time to load/reload: " + sw.ElapsedMilliseconds);
         }
 
         void PlateGo(Element e)
@@ -96,67 +101,73 @@ namespace SimulationServer
 
                     e.currentTemp += (av - e.currentTemp) * heatCoefficient;
                 }
-                //Console.WriteLine("adjusting temp to: " + e.currentTemp);
-
                 Thread.Sleep(delayMs);
             }
         }
 
-        public string CreateMatrixRepresentation()
+        public Matrix CreateMatrixRepresentation()
         {
-            string result = "";
+            var matrixMessageRepresentation = new Matrix();
+            //string result = "";
+
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                    result += matrix[i, j].ToString();
-                    if (i != matrix.GetLength(0) - 1 || j != matrix.GetLength(1) - 1)
+                    if (isReloading){
+                        //dont send messages when updating
+                        //matrixMessageRepresentation.Values.Add(new RGB { Red=15, Green=255, Blue=0});
+                    }
+                    else
                     {
-                        result += ";";
+                        //result += matrix[i, j].ToString();
+                        matrixMessageRepresentation.Values.Add(matrix[i, j].GetRGB());
                     }
                 }
             }
-            return result;
+            return matrixMessageRepresentation;
         }
 
         public void Stop()
         {
             foreach (Element e in matrix)
             {
-                e.stopRequested = true;
+                if(e != null)
+                {
+                    e.stopRequested = true;
+                }
             }
         }
 
-        public void ParseParams(List<string> parameters)
+        public void ParseParams(ClientMessage message)
         {
-            string variant = parameters[0];
-
-            if (variant == "coef")
+            switch (message.MsgCase)
             {
-                heatCoefficient = double.Parse(parameters[1]) / 100;
-                Console.WriteLine("coef change: " + heatCoefficient);
-            }
-            else
-            {
-                int x = int.Parse(parameters[1]);
-                int y = int.Parse(parameters[2]);
-                int temp = int.Parse(parameters[3]);
-                int coef = int.Parse(parameters[4]);
-
-                matrix[x, y].currentTemp = temp;
-
-                if (variant == "down")
-                {
-                    matrix[x, y].isHeating = true;
-                }
-                else
-                {
-                    foreach (Element e in matrix)
+                case ClientMessage.MsgOneofCase.Mouse:
+                    matrix[message.Mouse.XPosition, message.Mouse.YPosition].currentTemp = message.Mouse.Temperature;
+                    if (message.Mouse.Event == "down")
                     {
-                        e.isHeating = false;
+                        matrix[message.Mouse.XPosition, message.Mouse.YPosition].isHeating = true;
                     }
-                    Console.WriteLine("reset holds");
-                }
+                    else
+                    {
+                        foreach (Element el in matrix)
+                        {
+                            el.isHeating = false;
+                        }
+                    }
+                    break;
+                case ClientMessage.MsgOneofCase.Settings:
+                    if (message.Settings.HasCoef)
+                    {
+                        heatCoefficient = message.Settings.Coef / 100;
+                    }
+                    else if (message.Settings.HasSize)
+                    {
+                        BeginSimulation(message.Settings.Size);
+                    }
+                    break;
+
             }
         }
     }

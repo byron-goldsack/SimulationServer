@@ -33,14 +33,6 @@ namespace SimulationServer
             }
         }
 
-        //public void SetTemperature(double temp)
-        //{
-        //    lock (this)
-        //    {
-        //        currentTemp = temp;
-        //    }
-        //}
-
         public void AddNeighbour(Element e)
         {
             neighbours.Add(e);
@@ -52,6 +44,18 @@ namespace SimulationServer
             double blue = 255 - red;
 
             return (int)red + ":0:" + (int)blue;
+        }
+
+        public RGB GetRGB()
+        {
+            double red = GetTemperature() / 100 * 255;
+            double blue = 255 - red;
+            return new RGB
+            {
+                Red = (int)red,
+                Green = 0,
+                Blue = (int)blue
+            };
         }
     }
 }

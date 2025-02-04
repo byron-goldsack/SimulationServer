@@ -22,16 +22,19 @@ public static partial class MouseEventReflection {
   static MouseEventReflection() {
     byte[] descriptorData = global::System.Convert.FromBase64String(
         string.Concat(
-          "ChBNb3VzZUV2ZW50LnByb3RvInoKCk1vdXNlRXZlbnQSEgoKc2ltdWxhdGlv",
-          "bhgBIAEoCRIMCgR0eXBlGAIgASgJEg0KBWV2ZW50GAMgASgJEhIKCnhfcG9z",
-          "aXRpb24YBCABKAUSEgoKeV9wb3NpdGlvbhgFIAEoBRITCgt0ZW1wZXJhdHVy",
-          "ZRgGIAEoBSImCghTZXR0aW5ncxIMCgR0eXBlGAEgASgJEgwKBGNvZWYYAiAB",
-          "KAJiBnByb3RvMw=="));
+          "ChBNb3VzZUV2ZW50LnByb3RvIlgKCk1vdXNlRXZlbnQSDQoFZXZlbnQYASAB",
+          "KAkSEgoKeF9wb3NpdGlvbhgCIAEoBRISCgp5X3Bvc2l0aW9uGAMgASgFEhMK",
+          "C3RlbXBlcmF0dXJlGAQgASgFIkgKDlNldHRpbmdzVXBkYXRlEhEKBGNvZWYY",
+          "ASABKAJIAIgBARIRCgRzaXplGAIgASgFSAGIAQFCBwoFX2NvZWZCBwoFX3Np",
+          "emUiWQoNQ2xpZW50TWVzc2FnZRIcCgVtb3VzZRgBIAEoCzILLk1vdXNlRXZl",
+          "bnRIABIjCghzZXR0aW5ncxgCIAEoCzIPLlNldHRpbmdzVXBkYXRlSABCBQoD",
+          "bXNnYgZwcm90bzM="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-          new pbr::GeneratedClrTypeInfo(typeof(global::MouseEvent), global::MouseEvent.Parser, new[]{ "Simulation", "Type", "Event", "XPosition", "YPosition", "Temperature" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::Settings), global::Settings.Parser, new[]{ "Type", "Coef" }, null, null, null, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::MouseEvent), global::MouseEvent.Parser, new[]{ "Event", "XPosition", "YPosition", "Temperature" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::SettingsUpdate), global::SettingsUpdate.Parser, new[]{ "Coef", "Size" }, new[]{ "Coef", "Size" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::ClientMessage), global::ClientMessage.Parser, new[]{ "Mouse", "Settings" }, new[]{ "Msg" }, null, null, null)
         }));
   }
   #endregion
@@ -73,8 +76,6 @@ public sealed partial class MouseEvent : pb::IMessage<MouseEvent>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public MouseEvent(MouseEvent other) : this() {
-    simulation_ = other.simulation_;
-    type_ = other.type_;
     event_ = other.event_;
     xPosition_ = other.xPosition_;
     yPosition_ = other.yPosition_;
@@ -88,33 +89,12 @@ public sealed partial class MouseEvent : pb::IMessage<MouseEvent>
     return new MouseEvent(this);
   }
 
-  /// <summary>Field number for the "simulation" field.</summary>
-  public const int SimulationFieldNumber = 1;
-  private string simulation_ = "";
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public string Simulation {
-    get { return simulation_; }
-    set {
-      simulation_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-    }
-  }
-
-  /// <summary>Field number for the "type" field.</summary>
-  public const int TypeFieldNumber = 2;
-  private string type_ = "";
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public string Type {
-    get { return type_; }
-    set {
-      type_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-    }
-  }
-
   /// <summary>Field number for the "event" field.</summary>
-  public const int EventFieldNumber = 3;
+  public const int EventFieldNumber = 1;
   private string event_ = "";
+  /// <summary>
+  ///down, up
+  /// </summary>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public string Event {
@@ -125,7 +105,7 @@ public sealed partial class MouseEvent : pb::IMessage<MouseEvent>
   }
 
   /// <summary>Field number for the "x_position" field.</summary>
-  public const int XPositionFieldNumber = 4;
+  public const int XPositionFieldNumber = 2;
   private int xPosition_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -137,7 +117,7 @@ public sealed partial class MouseEvent : pb::IMessage<MouseEvent>
   }
 
   /// <summary>Field number for the "y_position" field.</summary>
-  public const int YPositionFieldNumber = 5;
+  public const int YPositionFieldNumber = 3;
   private int yPosition_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -149,8 +129,11 @@ public sealed partial class MouseEvent : pb::IMessage<MouseEvent>
   }
 
   /// <summary>Field number for the "temperature" field.</summary>
-  public const int TemperatureFieldNumber = 6;
+  public const int TemperatureFieldNumber = 4;
   private int temperature_;
+  /// <summary>
+  /// 0-100
+  /// </summary>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public int Temperature {
@@ -175,8 +158,6 @@ public sealed partial class MouseEvent : pb::IMessage<MouseEvent>
     if (ReferenceEquals(other, this)) {
       return true;
     }
-    if (Simulation != other.Simulation) return false;
-    if (Type != other.Type) return false;
     if (Event != other.Event) return false;
     if (XPosition != other.XPosition) return false;
     if (YPosition != other.YPosition) return false;
@@ -188,8 +169,6 @@ public sealed partial class MouseEvent : pb::IMessage<MouseEvent>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override int GetHashCode() {
     int hash = 1;
-    if (Simulation.Length != 0) hash ^= Simulation.GetHashCode();
-    if (Type.Length != 0) hash ^= Type.GetHashCode();
     if (Event.Length != 0) hash ^= Event.GetHashCode();
     if (XPosition != 0) hash ^= XPosition.GetHashCode();
     if (YPosition != 0) hash ^= YPosition.GetHashCode();
@@ -212,28 +191,20 @@ public sealed partial class MouseEvent : pb::IMessage<MouseEvent>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     output.WriteRawMessage(this);
   #else
-    if (Simulation.Length != 0) {
-      output.WriteRawTag(10);
-      output.WriteString(Simulation);
-    }
-    if (Type.Length != 0) {
-      output.WriteRawTag(18);
-      output.WriteString(Type);
-    }
     if (Event.Length != 0) {
-      output.WriteRawTag(26);
+      output.WriteRawTag(10);
       output.WriteString(Event);
     }
     if (XPosition != 0) {
-      output.WriteRawTag(32);
+      output.WriteRawTag(16);
       output.WriteInt32(XPosition);
     }
     if (YPosition != 0) {
-      output.WriteRawTag(40);
+      output.WriteRawTag(24);
       output.WriteInt32(YPosition);
     }
     if (Temperature != 0) {
-      output.WriteRawTag(48);
+      output.WriteRawTag(32);
       output.WriteInt32(Temperature);
     }
     if (_unknownFields != null) {
@@ -246,28 +217,20 @@ public sealed partial class MouseEvent : pb::IMessage<MouseEvent>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-    if (Simulation.Length != 0) {
-      output.WriteRawTag(10);
-      output.WriteString(Simulation);
-    }
-    if (Type.Length != 0) {
-      output.WriteRawTag(18);
-      output.WriteString(Type);
-    }
     if (Event.Length != 0) {
-      output.WriteRawTag(26);
+      output.WriteRawTag(10);
       output.WriteString(Event);
     }
     if (XPosition != 0) {
-      output.WriteRawTag(32);
+      output.WriteRawTag(16);
       output.WriteInt32(XPosition);
     }
     if (YPosition != 0) {
-      output.WriteRawTag(40);
+      output.WriteRawTag(24);
       output.WriteInt32(YPosition);
     }
     if (Temperature != 0) {
-      output.WriteRawTag(48);
+      output.WriteRawTag(32);
       output.WriteInt32(Temperature);
     }
     if (_unknownFields != null) {
@@ -280,12 +243,6 @@ public sealed partial class MouseEvent : pb::IMessage<MouseEvent>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public int CalculateSize() {
     int size = 0;
-    if (Simulation.Length != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeStringSize(Simulation);
-    }
-    if (Type.Length != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeStringSize(Type);
-    }
     if (Event.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeStringSize(Event);
     }
@@ -309,12 +266,6 @@ public sealed partial class MouseEvent : pb::IMessage<MouseEvent>
   public void MergeFrom(MouseEvent other) {
     if (other == null) {
       return;
-    }
-    if (other.Simulation.Length != 0) {
-      Simulation = other.Simulation;
-    }
-    if (other.Type.Length != 0) {
-      Type = other.Type;
     }
     if (other.Event.Length != 0) {
       Event = other.Event;
@@ -348,26 +299,18 @@ public sealed partial class MouseEvent : pb::IMessage<MouseEvent>
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
         case 10: {
-          Simulation = input.ReadString();
-          break;
-        }
-        case 18: {
-          Type = input.ReadString();
-          break;
-        }
-        case 26: {
           Event = input.ReadString();
           break;
         }
-        case 32: {
+        case 16: {
           XPosition = input.ReadInt32();
           break;
         }
-        case 40: {
+        case 24: {
           YPosition = input.ReadInt32();
           break;
         }
-        case 48: {
+        case 32: {
           Temperature = input.ReadInt32();
           break;
         }
@@ -391,26 +334,18 @@ public sealed partial class MouseEvent : pb::IMessage<MouseEvent>
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
           break;
         case 10: {
-          Simulation = input.ReadString();
-          break;
-        }
-        case 18: {
-          Type = input.ReadString();
-          break;
-        }
-        case 26: {
           Event = input.ReadString();
           break;
         }
-        case 32: {
+        case 16: {
           XPosition = input.ReadInt32();
           break;
         }
-        case 40: {
+        case 24: {
           YPosition = input.ReadInt32();
           break;
         }
-        case 48: {
+        case 32: {
           Temperature = input.ReadInt32();
           break;
         }
@@ -422,16 +357,17 @@ public sealed partial class MouseEvent : pb::IMessage<MouseEvent>
 }
 
 [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-public sealed partial class Settings : pb::IMessage<Settings>
+public sealed partial class SettingsUpdate : pb::IMessage<SettingsUpdate>
 #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     , pb::IBufferMessage
 #endif
 {
-  private static readonly pb::MessageParser<Settings> _parser = new pb::MessageParser<Settings>(() => new Settings());
+  private static readonly pb::MessageParser<SettingsUpdate> _parser = new pb::MessageParser<SettingsUpdate>(() => new SettingsUpdate());
   private pb::UnknownFieldSet _unknownFields;
+  private int _hasBits0;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public static pb::MessageParser<Settings> Parser { get { return _parser; } }
+  public static pb::MessageParser<SettingsUpdate> Parser { get { return _parser; } }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -447,7 +383,7 @@ public sealed partial class Settings : pb::IMessage<Settings>
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public Settings() {
+  public SettingsUpdate() {
     OnConstruction();
   }
 
@@ -455,59 +391,90 @@ public sealed partial class Settings : pb::IMessage<Settings>
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public Settings(Settings other) : this() {
-    type_ = other.type_;
+  public SettingsUpdate(SettingsUpdate other) : this() {
+    _hasBits0 = other._hasBits0;
     coef_ = other.coef_;
+    size_ = other.size_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public Settings Clone() {
-    return new Settings(this);
-  }
-
-  /// <summary>Field number for the "type" field.</summary>
-  public const int TypeFieldNumber = 1;
-  private string type_ = "";
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public string Type {
-    get { return type_; }
-    set {
-      type_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-    }
+  public SettingsUpdate Clone() {
+    return new SettingsUpdate(this);
   }
 
   /// <summary>Field number for the "coef" field.</summary>
-  public const int CoefFieldNumber = 2;
+  public const int CoefFieldNumber = 1;
+  private readonly static float CoefDefaultValue = 0F;
+
   private float coef_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public float Coef {
-    get { return coef_; }
+    get { if ((_hasBits0 & 1) != 0) { return coef_; } else { return CoefDefaultValue; } }
     set {
+      _hasBits0 |= 1;
       coef_ = value;
     }
+  }
+  /// <summary>Gets whether the "coef" field is set</summary>
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool HasCoef {
+    get { return (_hasBits0 & 1) != 0; }
+  }
+  /// <summary>Clears the value of the "coef" field</summary>
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void ClearCoef() {
+    _hasBits0 &= ~1;
+  }
+
+  /// <summary>Field number for the "size" field.</summary>
+  public const int SizeFieldNumber = 2;
+  private readonly static int SizeDefaultValue = 0;
+
+  private int size_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int Size {
+    get { if ((_hasBits0 & 2) != 0) { return size_; } else { return SizeDefaultValue; } }
+    set {
+      _hasBits0 |= 2;
+      size_ = value;
+    }
+  }
+  /// <summary>Gets whether the "size" field is set</summary>
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool HasSize {
+    get { return (_hasBits0 & 2) != 0; }
+  }
+  /// <summary>Clears the value of the "size" field</summary>
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void ClearSize() {
+    _hasBits0 &= ~2;
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override bool Equals(object other) {
-    return Equals(other as Settings);
+    return Equals(other as SettingsUpdate);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public bool Equals(Settings other) {
+  public bool Equals(SettingsUpdate other) {
     if (ReferenceEquals(other, null)) {
       return false;
     }
     if (ReferenceEquals(other, this)) {
       return true;
     }
-    if (Type != other.Type) return false;
     if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Coef, other.Coef)) return false;
+    if (Size != other.Size) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
@@ -515,8 +482,8 @@ public sealed partial class Settings : pb::IMessage<Settings>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override int GetHashCode() {
     int hash = 1;
-    if (Type.Length != 0) hash ^= Type.GetHashCode();
-    if (Coef != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Coef);
+    if (HasCoef) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Coef);
+    if (HasSize) hash ^= Size.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -535,13 +502,13 @@ public sealed partial class Settings : pb::IMessage<Settings>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     output.WriteRawMessage(this);
   #else
-    if (Type.Length != 0) {
-      output.WriteRawTag(10);
-      output.WriteString(Type);
-    }
-    if (Coef != 0F) {
-      output.WriteRawTag(21);
+    if (HasCoef) {
+      output.WriteRawTag(13);
       output.WriteFloat(Coef);
+    }
+    if (HasSize) {
+      output.WriteRawTag(16);
+      output.WriteInt32(Size);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -553,13 +520,13 @@ public sealed partial class Settings : pb::IMessage<Settings>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-    if (Type.Length != 0) {
-      output.WriteRawTag(10);
-      output.WriteString(Type);
-    }
-    if (Coef != 0F) {
-      output.WriteRawTag(21);
+    if (HasCoef) {
+      output.WriteRawTag(13);
       output.WriteFloat(Coef);
+    }
+    if (HasSize) {
+      output.WriteRawTag(16);
+      output.WriteInt32(Size);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
@@ -571,11 +538,11 @@ public sealed partial class Settings : pb::IMessage<Settings>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public int CalculateSize() {
     int size = 0;
-    if (Type.Length != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeStringSize(Type);
-    }
-    if (Coef != 0F) {
+    if (HasCoef) {
       size += 1 + 4;
+    }
+    if (HasSize) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(Size);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -585,15 +552,15 @@ public sealed partial class Settings : pb::IMessage<Settings>
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public void MergeFrom(Settings other) {
+  public void MergeFrom(SettingsUpdate other) {
     if (other == null) {
       return;
     }
-    if (other.Type.Length != 0) {
-      Type = other.Type;
-    }
-    if (other.Coef != 0F) {
+    if (other.HasCoef) {
       Coef = other.Coef;
+    }
+    if (other.HasSize) {
+      Size = other.Size;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -614,12 +581,296 @@ public sealed partial class Settings : pb::IMessage<Settings>
         default:
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
-        case 10: {
-          Type = input.ReadString();
+        case 13: {
+          Coef = input.ReadFloat();
           break;
         }
-        case 21: {
+        case 16: {
+          Size = input.ReadInt32();
+          break;
+        }
+      }
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+    if ((tag & 7) == 4) {
+      // Abort on any end group tag.
+      return;
+    }
+    switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+          break;
+        case 13: {
           Coef = input.ReadFloat();
+          break;
+        }
+        case 16: {
+          Size = input.ReadInt32();
+          break;
+        }
+      }
+    }
+  }
+  #endif
+
+}
+
+[global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+public sealed partial class ClientMessage : pb::IMessage<ClientMessage>
+#if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    , pb::IBufferMessage
+#endif
+{
+  private static readonly pb::MessageParser<ClientMessage> _parser = new pb::MessageParser<ClientMessage>(() => new ClientMessage());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pb::MessageParser<ClientMessage> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::MouseEventReflection.Descriptor.MessageTypes[2]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public ClientMessage() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public ClientMessage(ClientMessage other) : this() {
+    switch (other.MsgCase) {
+      case MsgOneofCase.Mouse:
+        Mouse = other.Mouse.Clone();
+        break;
+      case MsgOneofCase.Settings:
+        Settings = other.Settings.Clone();
+        break;
+    }
+
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public ClientMessage Clone() {
+    return new ClientMessage(this);
+  }
+
+  /// <summary>Field number for the "mouse" field.</summary>
+  public const int MouseFieldNumber = 1;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public global::MouseEvent Mouse {
+    get { return msgCase_ == MsgOneofCase.Mouse ? (global::MouseEvent) msg_ : null; }
+    set {
+      msg_ = value;
+      msgCase_ = value == null ? MsgOneofCase.None : MsgOneofCase.Mouse;
+    }
+  }
+
+  /// <summary>Field number for the "settings" field.</summary>
+  public const int SettingsFieldNumber = 2;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public global::SettingsUpdate Settings {
+    get { return msgCase_ == MsgOneofCase.Settings ? (global::SettingsUpdate) msg_ : null; }
+    set {
+      msg_ = value;
+      msgCase_ = value == null ? MsgOneofCase.None : MsgOneofCase.Settings;
+    }
+  }
+
+  private object msg_;
+  /// <summary>Enum of possible cases for the "msg" oneof.</summary>
+  public enum MsgOneofCase {
+    None = 0,
+    Mouse = 1,
+    Settings = 2,
+  }
+  private MsgOneofCase msgCase_ = MsgOneofCase.None;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public MsgOneofCase MsgCase {
+    get { return msgCase_; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void ClearMsg() {
+    msgCase_ = MsgOneofCase.None;
+    msg_ = null;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override bool Equals(object other) {
+    return Equals(other as ClientMessage);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool Equals(ClientMessage other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (!object.Equals(Mouse, other.Mouse)) return false;
+    if (!object.Equals(Settings, other.Settings)) return false;
+    if (MsgCase != other.MsgCase) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (msgCase_ == MsgOneofCase.Mouse) hash ^= Mouse.GetHashCode();
+    if (msgCase_ == MsgOneofCase.Settings) hash ^= Settings.GetHashCode();
+    hash ^= (int) msgCase_;
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void WriteTo(pb::CodedOutputStream output) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    output.WriteRawMessage(this);
+  #else
+    if (msgCase_ == MsgOneofCase.Mouse) {
+      output.WriteRawTag(10);
+      output.WriteMessage(Mouse);
+    }
+    if (msgCase_ == MsgOneofCase.Settings) {
+      output.WriteRawTag(18);
+      output.WriteMessage(Settings);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+    if (msgCase_ == MsgOneofCase.Mouse) {
+      output.WriteRawTag(10);
+      output.WriteMessage(Mouse);
+    }
+    if (msgCase_ == MsgOneofCase.Settings) {
+      output.WriteRawTag(18);
+      output.WriteMessage(Settings);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(ref output);
+    }
+  }
+  #endif
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int CalculateSize() {
+    int size = 0;
+    if (msgCase_ == MsgOneofCase.Mouse) {
+      size += 1 + pb::CodedOutputStream.ComputeMessageSize(Mouse);
+    }
+    if (msgCase_ == MsgOneofCase.Settings) {
+      size += 1 + pb::CodedOutputStream.ComputeMessageSize(Settings);
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(ClientMessage other) {
+    if (other == null) {
+      return;
+    }
+    switch (other.MsgCase) {
+      case MsgOneofCase.Mouse:
+        if (Mouse == null) {
+          Mouse = new global::MouseEvent();
+        }
+        Mouse.MergeFrom(other.Mouse);
+        break;
+      case MsgOneofCase.Settings:
+        if (Settings == null) {
+          Settings = new global::SettingsUpdate();
+        }
+        Settings.MergeFrom(other.Settings);
+        break;
+    }
+
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(pb::CodedInputStream input) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    input.ReadRawMessage(this);
+  #else
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+    if ((tag & 7) == 4) {
+      // Abort on any end group tag.
+      return;
+    }
+    switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 10: {
+          global::MouseEvent subBuilder = new global::MouseEvent();
+          if (msgCase_ == MsgOneofCase.Mouse) {
+            subBuilder.MergeFrom(Mouse);
+          }
+          input.ReadMessage(subBuilder);
+          Mouse = subBuilder;
+          break;
+        }
+        case 18: {
+          global::SettingsUpdate subBuilder = new global::SettingsUpdate();
+          if (msgCase_ == MsgOneofCase.Settings) {
+            subBuilder.MergeFrom(Settings);
+          }
+          input.ReadMessage(subBuilder);
+          Settings = subBuilder;
           break;
         }
       }
@@ -642,11 +893,21 @@ public sealed partial class Settings : pb::IMessage<Settings>
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
           break;
         case 10: {
-          Type = input.ReadString();
+          global::MouseEvent subBuilder = new global::MouseEvent();
+          if (msgCase_ == MsgOneofCase.Mouse) {
+            subBuilder.MergeFrom(Mouse);
+          }
+          input.ReadMessage(subBuilder);
+          Mouse = subBuilder;
           break;
         }
-        case 21: {
-          Coef = input.ReadFloat();
+        case 18: {
+          global::SettingsUpdate subBuilder = new global::SettingsUpdate();
+          if (msgCase_ == MsgOneofCase.Settings) {
+            subBuilder.MergeFrom(Settings);
+          }
+          input.ReadMessage(subBuilder);
+          Settings = subBuilder;
           break;
         }
       }

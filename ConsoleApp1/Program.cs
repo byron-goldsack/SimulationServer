@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Google.Protobuf;
 using SimulationServer;
 
 class Program
@@ -13,8 +14,8 @@ class Program
 
     static async Task Main(string[] args)
     {
-        var simulation = new ThermalSimulation();
-        simulation.BeginSimulation();
+        var simulation = new ThermalSimulation(20);
+        simulation.BeginSimulation(20);
 
         HttpListener httpListener = new HttpListener();
         httpListener.Prefixes.Add("http://127.0.0.1:2024/");
@@ -52,11 +53,11 @@ class Program
     {
         while (sim.continueSending)
         {
-            string message = sim.CreateMatrixRepresentation();
-            byte[] buffer = Encoding.UTF8.GetBytes(message);
+            Matrix message = sim.CreateMatrixRepresentation();
+            byte[] buffer = message.ToByteArray();
             //TODO: only send if new
-            webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
-            //webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Binary, true, CancellationToken.None);
+            webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Binary, true, CancellationToken.None);
+
             Thread.Sleep(sim.pollingDelayMs);
         }
     }
@@ -76,9 +77,9 @@ class Program
 
                 try
                 {
-                    MouseEvent mouseEvent = MouseEvent.Parser.ParseFrom(messageBytes);
-
-                    Console.WriteLine("Mouse event received: " + mouseEvent.XPosition);
+                    Console.WriteLine("Received message");
+                    ClientMessage message = ClientMessage.Parser.ParseFrom(messageBytes);
+                    sim.ParseParams(message);
                 }
                 catch (Exception e)
                 {
@@ -87,7 +88,7 @@ class Program
             }
             else if (result.MessageType == WebSocketMessageType.Close)
             {
-                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+                break;
             }
         }
     }
