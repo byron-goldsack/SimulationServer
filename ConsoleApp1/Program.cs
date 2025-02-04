@@ -15,7 +15,6 @@ class Program
     static async Task Main(string[] args)
     {
         var simulation = new ThermalSimulation(20);
-        simulation.BeginSimulation(20);
 
         HttpListener httpListener = new HttpListener();
         httpListener.Prefixes.Add("http://127.0.0.1:2024/");

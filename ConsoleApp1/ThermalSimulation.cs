@@ -23,6 +23,7 @@ namespace SimulationServer
         {
             matrix = new Element[defaultSize, defaultSize];
             threads = new List<Thread>();
+            continueSending = true;
         }
 
         public void BeginSimulation(int size)
@@ -36,8 +37,6 @@ namespace SimulationServer
             threads = new List<Thread>();
 
             Random rnd = new Random();
-
-            continueSending = true;
 
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
@@ -114,6 +113,7 @@ namespace SimulationServer
         public Matrix CreateMatrixRepresentation()
         {
             var matrixMessageRepresentation = new Matrix();
+            if (matrix[0,0] == null) return matrixMessageRepresentation;
             //string result = "";
 
             for (int i = 0; i < matrix.GetLength(0); i++)
