@@ -26,15 +26,17 @@ public static partial class MouseEventReflection {
           "KAkSEgoKeF9wb3NpdGlvbhgCIAEoBRISCgp5X3Bvc2l0aW9uGAMgASgFEhMK",
           "C3RlbXBlcmF0dXJlGAQgASgFIkgKDlNldHRpbmdzVXBkYXRlEhEKBGNvZWYY",
           "ASABKAJIAIgBARIRCgRzaXplGAIgASgFSAGIAQFCBwoFX2NvZWZCBwoFX3Np",
-          "emUiWQoNQ2xpZW50TWVzc2FnZRIcCgVtb3VzZRgBIAEoCzILLk1vdXNlRXZl",
-          "bnRIABIjCghzZXR0aW5ncxgCIAEoCzIPLlNldHRpbmdzVXBkYXRlSABCBQoD",
-          "bXNnYgZwcm90bzM="));
+          "emUiIgoORXhlY3V0ZVNjZW5hcm8SEAoIc2NlbmFyaW8YASABKAkifgoNQ2xp",
+          "ZW50TWVzc2FnZRIcCgVtb3VzZRgBIAEoCzILLk1vdXNlRXZlbnRIABIjCghz",
+          "ZXR0aW5ncxgCIAEoCzIPLlNldHRpbmdzVXBkYXRlSAASIwoIc2NlbmFyaW8Y",
+          "AyABKAsyDy5FeGVjdXRlU2NlbmFyb0gAQgUKA21zZ2IGcHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::MouseEvent), global::MouseEvent.Parser, new[]{ "Event", "XPosition", "YPosition", "Temperature" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::SettingsUpdate), global::SettingsUpdate.Parser, new[]{ "Coef", "Size" }, new[]{ "Coef", "Size" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::ClientMessage), global::ClientMessage.Parser, new[]{ "Mouse", "Settings" }, new[]{ "Msg" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::ExecuteScenaro), global::ExecuteScenaro.Parser, new[]{ "Scenario" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::ClientMessage), global::ClientMessage.Parser, new[]{ "Mouse", "Settings", "Scenario" }, new[]{ "Msg" }, null, null, null)
         }));
   }
   #endregion
@@ -93,7 +95,7 @@ public sealed partial class MouseEvent : pb::IMessage<MouseEvent>
   public const int EventFieldNumber = 1;
   private string event_ = "";
   /// <summary>
-  ///down, up
+  ///down, up, block, unblock
   /// </summary>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -624,6 +626,204 @@ public sealed partial class SettingsUpdate : pb::IMessage<SettingsUpdate>
 }
 
 [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+public sealed partial class ExecuteScenaro : pb::IMessage<ExecuteScenaro>
+#if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    , pb::IBufferMessage
+#endif
+{
+  private static readonly pb::MessageParser<ExecuteScenaro> _parser = new pb::MessageParser<ExecuteScenaro>(() => new ExecuteScenaro());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pb::MessageParser<ExecuteScenaro> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::MouseEventReflection.Descriptor.MessageTypes[2]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public ExecuteScenaro() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public ExecuteScenaro(ExecuteScenaro other) : this() {
+    scenario_ = other.scenario_;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public ExecuteScenaro Clone() {
+    return new ExecuteScenaro(this);
+  }
+
+  /// <summary>Field number for the "scenario" field.</summary>
+  public const int ScenarioFieldNumber = 1;
+  private string scenario_ = "";
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public string Scenario {
+    get { return scenario_; }
+    set {
+      scenario_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override bool Equals(object other) {
+    return Equals(other as ExecuteScenaro);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool Equals(ExecuteScenaro other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (Scenario != other.Scenario) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (Scenario.Length != 0) hash ^= Scenario.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void WriteTo(pb::CodedOutputStream output) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    output.WriteRawMessage(this);
+  #else
+    if (Scenario.Length != 0) {
+      output.WriteRawTag(10);
+      output.WriteString(Scenario);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+    if (Scenario.Length != 0) {
+      output.WriteRawTag(10);
+      output.WriteString(Scenario);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(ref output);
+    }
+  }
+  #endif
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int CalculateSize() {
+    int size = 0;
+    if (Scenario.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeStringSize(Scenario);
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(ExecuteScenaro other) {
+    if (other == null) {
+      return;
+    }
+    if (other.Scenario.Length != 0) {
+      Scenario = other.Scenario;
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(pb::CodedInputStream input) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    input.ReadRawMessage(this);
+  #else
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+    if ((tag & 7) == 4) {
+      // Abort on any end group tag.
+      return;
+    }
+    switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 10: {
+          Scenario = input.ReadString();
+          break;
+        }
+      }
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+    if ((tag & 7) == 4) {
+      // Abort on any end group tag.
+      return;
+    }
+    switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+          break;
+        case 10: {
+          Scenario = input.ReadString();
+          break;
+        }
+      }
+    }
+  }
+  #endif
+
+}
+
+[global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
 public sealed partial class ClientMessage : pb::IMessage<ClientMessage>
 #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     , pb::IBufferMessage
@@ -638,7 +838,7 @@ public sealed partial class ClientMessage : pb::IMessage<ClientMessage>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::MouseEventReflection.Descriptor.MessageTypes[2]; }
+    get { return global::MouseEventReflection.Descriptor.MessageTypes[3]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -664,6 +864,9 @@ public sealed partial class ClientMessage : pb::IMessage<ClientMessage>
         break;
       case MsgOneofCase.Settings:
         Settings = other.Settings.Clone();
+        break;
+      case MsgOneofCase.Scenario:
+        Scenario = other.Scenario.Clone();
         break;
     }
 
@@ -700,12 +903,25 @@ public sealed partial class ClientMessage : pb::IMessage<ClientMessage>
     }
   }
 
+  /// <summary>Field number for the "scenario" field.</summary>
+  public const int ScenarioFieldNumber = 3;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public global::ExecuteScenaro Scenario {
+    get { return msgCase_ == MsgOneofCase.Scenario ? (global::ExecuteScenaro) msg_ : null; }
+    set {
+      msg_ = value;
+      msgCase_ = value == null ? MsgOneofCase.None : MsgOneofCase.Scenario;
+    }
+  }
+
   private object msg_;
   /// <summary>Enum of possible cases for the "msg" oneof.</summary>
   public enum MsgOneofCase {
     None = 0,
     Mouse = 1,
     Settings = 2,
+    Scenario = 3,
   }
   private MsgOneofCase msgCase_ = MsgOneofCase.None;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -738,6 +954,7 @@ public sealed partial class ClientMessage : pb::IMessage<ClientMessage>
     }
     if (!object.Equals(Mouse, other.Mouse)) return false;
     if (!object.Equals(Settings, other.Settings)) return false;
+    if (!object.Equals(Scenario, other.Scenario)) return false;
     if (MsgCase != other.MsgCase) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
@@ -748,6 +965,7 @@ public sealed partial class ClientMessage : pb::IMessage<ClientMessage>
     int hash = 1;
     if (msgCase_ == MsgOneofCase.Mouse) hash ^= Mouse.GetHashCode();
     if (msgCase_ == MsgOneofCase.Settings) hash ^= Settings.GetHashCode();
+    if (msgCase_ == MsgOneofCase.Scenario) hash ^= Scenario.GetHashCode();
     hash ^= (int) msgCase_;
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
@@ -775,6 +993,10 @@ public sealed partial class ClientMessage : pb::IMessage<ClientMessage>
       output.WriteRawTag(18);
       output.WriteMessage(Settings);
     }
+    if (msgCase_ == MsgOneofCase.Scenario) {
+      output.WriteRawTag(26);
+      output.WriteMessage(Scenario);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
     }
@@ -793,6 +1015,10 @@ public sealed partial class ClientMessage : pb::IMessage<ClientMessage>
       output.WriteRawTag(18);
       output.WriteMessage(Settings);
     }
+    if (msgCase_ == MsgOneofCase.Scenario) {
+      output.WriteRawTag(26);
+      output.WriteMessage(Scenario);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
     }
@@ -808,6 +1034,9 @@ public sealed partial class ClientMessage : pb::IMessage<ClientMessage>
     }
     if (msgCase_ == MsgOneofCase.Settings) {
       size += 1 + pb::CodedOutputStream.ComputeMessageSize(Settings);
+    }
+    if (msgCase_ == MsgOneofCase.Scenario) {
+      size += 1 + pb::CodedOutputStream.ComputeMessageSize(Scenario);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -833,6 +1062,12 @@ public sealed partial class ClientMessage : pb::IMessage<ClientMessage>
           Settings = new global::SettingsUpdate();
         }
         Settings.MergeFrom(other.Settings);
+        break;
+      case MsgOneofCase.Scenario:
+        if (Scenario == null) {
+          Scenario = new global::ExecuteScenaro();
+        }
+        Scenario.MergeFrom(other.Scenario);
         break;
     }
 
@@ -873,6 +1108,15 @@ public sealed partial class ClientMessage : pb::IMessage<ClientMessage>
           Settings = subBuilder;
           break;
         }
+        case 26: {
+          global::ExecuteScenaro subBuilder = new global::ExecuteScenaro();
+          if (msgCase_ == MsgOneofCase.Scenario) {
+            subBuilder.MergeFrom(Scenario);
+          }
+          input.ReadMessage(subBuilder);
+          Scenario = subBuilder;
+          break;
+        }
       }
     }
   #endif
@@ -908,6 +1152,15 @@ public sealed partial class ClientMessage : pb::IMessage<ClientMessage>
           }
           input.ReadMessage(subBuilder);
           Settings = subBuilder;
+          break;
+        }
+        case 26: {
+          global::ExecuteScenaro subBuilder = new global::ExecuteScenaro();
+          if (msgCase_ == MsgOneofCase.Scenario) {
+            subBuilder.MergeFrom(Scenario);
+          }
+          input.ReadMessage(subBuilder);
+          Scenario = subBuilder;
           break;
         }
       }

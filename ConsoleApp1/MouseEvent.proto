@@ -1,7 +1,7 @@
 ﻿syntax = "proto3";
 
 message MouseEvent {
-  string event = 1; //down, up
+  string event = 1; //down, up, block, unblock
   int32 x_position = 2;
   int32 y_position = 3;
   int32 temperature = 4; // 0-100
@@ -12,9 +12,14 @@ message SettingsUpdate {
   optional int32 size = 2;
 }
 
+message ExecuteScenaro {
+	string scenario = 1;
+}
+
 message ClientMessage {
 	oneof msg {
 		MouseEvent mouse = 1;
 		SettingsUpdate settings = 2;
+		ExecuteScenaro scenario = 3;
 	}
 }

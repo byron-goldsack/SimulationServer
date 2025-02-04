@@ -12,10 +12,11 @@ namespace SimulationServer
         public double currentTemp;
         public List<Element> neighbours;
         public bool isHeating;
+        public bool isBlocked;
 
         public Element()
         {
-
+            isBlocked = false;
             currentTemp = 0;
             neighbours = new List<Element>();
         }
@@ -38,18 +39,21 @@ namespace SimulationServer
             neighbours.Add(e);
         }
 
-        public override string? ToString()
-        {
-            double red = GetTemperature() / 100 * 255;
-            double blue = 255 - red;
-
-            return (int)red + ":0:" + (int)blue;
-        }
-
         public RGB GetRGB()
         {
             double red = GetTemperature() / 100 * 255;
             double blue = 255 - red;
+
+            if (isBlocked)
+            {
+                return new RGB
+                {
+                    Red = 0,
+                    Green = 0,
+                    Blue = 0
+                };
+            }
+
             return new RGB
             {
                 Red = (int)red,

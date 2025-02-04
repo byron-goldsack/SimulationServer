@@ -77,7 +77,6 @@ class Program
 
                 try
                 {
-                    Console.WriteLine("Received message");
                     ClientMessage message = ClientMessage.Parser.ParseFrom(messageBytes);
                     sim.ParseParams(message);
                 }

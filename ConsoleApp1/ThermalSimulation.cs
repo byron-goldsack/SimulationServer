@@ -27,6 +27,7 @@ namespace SimulationServer
 
         public void BeginSimulation(int size)
         {
+            UnblockAll();
             Stopwatch sw = new Stopwatch();
             sw.Start();
             isReloading = true;
@@ -90,14 +91,19 @@ namespace SimulationServer
         {
             while (e.stopRequested == false)
             {
-                if (!e.isHeating)
+                if (!e.isHeating && !e.isBlocked)
                 {
                     double av = 0;
+                    int nonBlockingNeighbours = 0;
                     foreach (Element e2 in e.neighbours)
                     {
-                        av += e2.GetTemperature();
+                        if (!e2.isBlocked)
+                        {
+                            av += e2.GetTemperature();
+                            nonBlockingNeighbours++;
+                        }
                     }
-                    av /= e.neighbours.Count;
+                    av /= nonBlockingNeighbours;
 
                     e.currentTemp += (av - e.currentTemp) * heatCoefficient;
                 }
@@ -139,6 +145,17 @@ namespace SimulationServer
             }
         }
 
+        public void UnblockAll()
+        {
+            foreach (Element e in matrix)
+            {
+                if (e != null)
+                {
+                    e.isBlocked = false;
+                }
+            }
+        }
+
         public void ParseParams(ClientMessage message)
         {
             switch (message.MsgCase)
@@ -149,14 +166,23 @@ namespace SimulationServer
                     {
                         matrix[message.Mouse.XPosition, message.Mouse.YPosition].isHeating = true;
                     }
-                    else
+                    else if (message.Mouse.Event == "up")
                     {
                         foreach (Element el in matrix)
                         {
                             el.isHeating = false;
                         }
                     }
+                    else if (message.Mouse.Event == "block")
+                    {
+                        matrix[message.Mouse.XPosition, message.Mouse.YPosition].isBlocked = true;
+                    }
+                    else if (message.Mouse.Event == "unblock")
+                    {
+                        matrix[message.Mouse.XPosition, message.Mouse.YPosition].isBlocked = false;
+                    }
                     break;
+
                 case ClientMessage.MsgOneofCase.Settings:
                     if (message.Settings.HasCoef)
                     {
@@ -167,7 +193,31 @@ namespace SimulationServer
                         BeginSimulation(message.Settings.Size);
                     }
                     break;
+                case ClientMessage.MsgOneofCase.Scenario:
+                    Console.WriteLine("Scenario received: " + message.Scenario.Scenario);
+                    switch (message.Scenario.Scenario)
+                    {
+                        case "chamber":
+                            BeginSimulation(10);
+                            break;
+                        case "unblock":
+                            UnblockAll();
+                            break;
+                        case "heatall":
+                            foreach(Element e in matrix)
+                            {
+                                if (e != null) e.currentTemp = 100;
+                            }
+                            break;
+                        case "coolall":
+                            foreach (Element e in matrix)
+                            {
+                                if (e != null) e.currentTemp = 0;
+                            }
+                            break;
 
+                    }
+                    break;
             }
         }
     }
