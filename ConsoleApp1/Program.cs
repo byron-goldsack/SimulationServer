@@ -67,25 +67,34 @@ class Program
         {
             byte[] buffer = new byte[1024 * 4];
 
-            WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-
-            if (result.MessageType == WebSocketMessageType.Binary)
+            try
             {
-                byte[] messageBytes = new byte[result.Count];
-                Array.Copy(buffer, messageBytes, result.Count);
+                WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
-                try
+                if (result.MessageType == WebSocketMessageType.Binary)
                 {
-                    ClientMessage message = ClientMessage.Parser.ParseFrom(messageBytes);
-                    sim.ParseParams(message);
+                    byte[] messageBytes = new byte[result.Count];
+                    Array.Copy(buffer, messageBytes, result.Count);
+
+                    try
+                    {
+                        ClientMessage message = ClientMessage.Parser.ParseFrom(messageBytes);
+                        sim.ParseParams(message);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Error parsing mouse event: " + e.Message);
+                    }
                 }
-                catch (Exception e)
+                else if (result.MessageType == WebSocketMessageType.Close)
                 {
-                    Console.WriteLine("Error parsing mouse event: " + e.Message);
+                    break;
                 }
             }
-            else if (result.MessageType == WebSocketMessageType.Close)
+            catch (Exception e)
             {
+                Console.WriteLine("Error receiving message: " + e.Message);
+                sim.Stop();
                 break;
             }
         }

@@ -15,26 +15,33 @@ namespace SimulationServer
         public int delayMs = 10;
         public int pollingDelayMs = 10;
         public double heatCoefficient = 0.5;
-        public bool continueSending;
-        Element[,] matrix;
-        List<Thread> threads;
         bool isReloading = false;
+
+        public bool continueSending;
+
+        Element[,] matrix;
+        //List<Thread> threads;
+        CancellationTokenSource cts;
+
         public ThermalSimulation(int defaultSize)
         {
             matrix = new Element[defaultSize, defaultSize];
-            threads = new List<Thread>();
+            //threads = new List<Thread>();
+            cts = new CancellationTokenSource();
             continueSending = true;
         }
 
         public void BeginSimulation(int size)
         {
+            Console.WriteLine("sizing at: " + size);
             UnblockAll();
             Stopwatch sw = new Stopwatch();
             sw.Start();
             isReloading = true;
             Stop();
             matrix = new Element[size, size];
-            threads = new List<Thread>();
+            //threads = new List<Thread>();
+            cts = new CancellationTokenSource();
 
             Random rnd = new Random();
 
@@ -45,8 +52,6 @@ namespace SimulationServer
                     Element newEl = new Element();
                     newEl.currentTemp = 0;
                     matrix[i, j] = newEl;
-                    Thread newThread = new Thread(() => PlateGo(newEl));
-                    threads.Add(newThread);
                 }
             }
 
@@ -73,40 +78,57 @@ namespace SimulationServer
                 }
             }
 
-            int k = 0;
-            foreach (Thread t in threads)
-            {
-                t.Start();
-                k++;
-            }
+            Task.Run(() => SimulationLoop(cts.Token));
 
-            Console.WriteLine("Threads started");
+            Console.WriteLine("Sim started");
             isReloading = false;
             sw.Stop();
             Console.WriteLine("Time to load/reload: " + sw.ElapsedMilliseconds);
         }
 
-        void PlateGo(Element e)
+        async void SimulationLoop(CancellationToken token)
         {
-            while (e.stopRequested == false)
+            try
             {
-                if (!e.isHeating && !e.isBlocked)
+                while (!token.IsCancellationRequested)
                 {
-                    double av = 0;
-                    int nonBlockingNeighbours = 0;
-                    foreach (Element e2 in e.neighbours)
+                    Parallel.For(0, matrix.GetLength(0), i =>
                     {
-                        if (!e2.isBlocked)
+                        Parallel.For(0, matrix.GetLength(1), j =>
                         {
-                            av += e2.GetTemperature();
-                            nonBlockingNeighbours++;
-                        }
-                    }
-                    av /= nonBlockingNeighbours;
+                            Element e = matrix[i, j];
+                            if (!e.isHeating && !e.isBlocked)
+                            {
+                                double av = 0;
+                                int nonBlockedNeighbours = 0;
+                                foreach (Element n in e.neighbours)
+                                {
+                                    if (!n.isBlocked)
+                                    {
+                                        av += n.GetTemperature();
+                                        nonBlockedNeighbours++;
+                                    }
+                                }
+                                if (nonBlockedNeighbours > 0)
+                                {
+                                    av /= nonBlockedNeighbours;
+                                    e.currentTemp += (av - e.currentTemp) * heatCoefficient;
+                                }
+                            }
+                        });
 
-                    e.currentTemp += (av - e.currentTemp) * heatCoefficient;
+                    });
+                    await Task.Delay(delayMs, token);
                 }
-                Thread.Sleep(delayMs);
+
+            }
+            catch(TaskCanceledException ex)
+            {
+                Console.WriteLine("Task cancelled");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Error in simulation loop: " + ex.Message);
             }
         }
 
@@ -136,13 +158,7 @@ namespace SimulationServer
 
         public void Stop()
         {
-            foreach (Element e in matrix)
-            {
-                if(e != null)
-                {
-                    e.stopRequested = true;
-                }
-            }
+            cts.Cancel();
         }
 
         public void UnblockAll()
